@@ -5,7 +5,8 @@ from pyautogui import ImageNotFoundException
 import PIL
 import time
 
-JUMP_TIMING = 230
+JUMP_TIMING = 232  # pixel X coordinate of screenshot
+JUMP_BREAK = 0  # sleep time after jumping
 
 robot_rex = True
 
@@ -29,18 +30,25 @@ else:
     start_y = dinosaur[1]
     pyautogui.press('space')
     time.sleep(1)
-    im = pyautogui.screenshot(imageFilename='my_screenshot.png ', region=(start_x, start_y, 400, 100))
+    im = pyautogui.screenshot(imageFilename='my_screenshot.png ', region=(start_x, start_y, 400, 110))
 
 while robot_rex:
-    image = pyautogui.screenshot(region=(start_x, start_y, 400, 100))
-    mode = image.getpixel((1, 1))
+    image = pyautogui.screenshot(region=(start_x, start_y, 400, 150))
+    mode = image.getpixel((1, 109))
 
-    for cor in range((JUMP_TIMING - 40), (JUMP_TIMING + 40), 3):
+    for cor in range((JUMP_TIMING - 30), (JUMP_TIMING + 25), 4):
+        # cactus and low bird detection
         pixel = image.getpixel((cor, 60))
         if mode[0] > 100 > pixel[0] or mode[0] < 100 < pixel[0]:
             pyautogui.press('space')
+            time.sleep(JUMP_BREAK)
             break
-        pixel = image.getpixel((cor, 40))
+        # middle bird detection
+        pixel = image.getpixel((cor + 40, 40))
         if mode[0] > 100 > pixel[0] or mode[0] < 100 < pixel[0]:
             pyautogui.press('space')
+            time.sleep(JUMP_BREAK)
             break
+
+# it jumps again after middle bird, why?
+# does break loop mean the for loops start again or is it just going out of the if statement? should i use continue instead???
